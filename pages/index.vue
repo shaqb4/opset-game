@@ -10,29 +10,34 @@ import { SolverPool } from "~/lib/solverPool"
 
 const game = useGameStore();
 
-let numbers = [ 6, 8, 8, 11, 11, 23 ];
-let target = 145728;
+if (process.client) {
 
-let solverPool = new SolverPool();
-solverPool.setOnCompletion((opset) => {
-    console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
-    console.log(`Duration: ${opset.end - opset.start} ms`);
-    console.log(`Solutions:`);
-    console.log(new Array(...opset.solutions));
+    console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
+    let numbers = [ 6, 8, 8, 11, 11, 23 ];
+    let target = 145728;
+    
+    let solverPool = new SolverPool();
+    solverPool.setOnCompletion((opset) => {
+        console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
+        console.log(`Duration: ${opset.end - opset.start} ms`);
+        console.log(`Solutions:`);
+        console.log(new Array(...opset.solutions));
+        solverPool.beginNext();
+    });
+    solverPool.generateSolutions(numbers, target);
+    
+    numbers = [ 3, 4, 6, 15, 20, 21 ];
+    target = 96;
+    
+    solverPool.generateSolutions(numbers, target);
+    
+    numbers = [ 1, 7, 9, 14, 19, 22 ];
+    target = 470;
+    
+    solverPool.generateSolutions(numbers, target);
     solverPool.beginNext();
-});
-solverPool.generateSolutions(numbers, target);
+}
 
-numbers = [ 3, 4, 6, 15, 20, 21 ];
-target = 96;
-
-solverPool.generateSolutions(numbers, target);
-
-numbers = [ 1, 7, 9, 14, 19, 22 ];
-target = 470;
-
-solverPool.generateSolutions(numbers, target);
-solverPool.beginNext();
 
 
 

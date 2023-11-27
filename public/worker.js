@@ -1,3 +1,4 @@
+console.log(`crossOriginIsolated: ${self.crossOriginIsolated}`)
 import { Permutations } from './permutations.js'
 import { PostFixSolver } from './postFixSolver.js'
 
