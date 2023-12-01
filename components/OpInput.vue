@@ -9,7 +9,7 @@
     })
 
     const config = {
-        size: 40,
+        size: 60,
         unit: 'px'
     }
 

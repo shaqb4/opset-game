@@ -5,85 +5,59 @@ import OpInput from '~/components/OpInput'
 import OpButton from '~/components/OpButton'
 import { useGameStore } from '~/store/game'
 import { storeToRefs } from 'pinia'
-import { OpSetSolutionSolver } from '~/lib/solutionSolver.js'
+import { OpSetSolutionSolver } from '~/lib/solutionSolver'
 import { SolverPool } from "~/lib/solverPool"
+import { OpSetBoardGenerator, OpSetBoardConfig } from '~/lib/opSetBoardGenerator'
 
 const game = useGameStore();
 
-if (process.client) {
+const { solutions, target, digits, digitBoardIds, ops, expression, isDigitSelected, isOpSelected, isDigitDisabled, completedActions } = storeToRefs(game);
 
-    console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
-    let numbers = [ 6, 8, 8, 11, 11, 23 ];
-    let target = 145728;
-    
-    let solverPool = new SolverPool();
-    solverPool.setOnCompletion((opset) => {
-        console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
-        console.log(`Duration: ${opset.end - opset.start} ms`);
-        console.log(`Solutions:`);
-        console.log(new Array(...opset.solutions));
-        solverPool.beginNext();
-    });
-    solverPool.generateSolutions(numbers, target);
-    
-    numbers = [ 3, 4, 6, 15, 20, 21 ];
-    target = 96;
-    
-    solverPool.generateSolutions(numbers, target);
-    
-    numbers = [ 1, 7, 9, 14, 19, 22 ];
-    target = 470;
-    
-    solverPool.generateSolutions(numbers, target);
-    solverPool.beginNext();
-}
+let boardGenConfig = new OpSetBoardConfig(6, 25, 3, 33);
+let boardGenerator = new OpSetBoardGenerator(boardGenConfig);
+
+let solverPool = new SolverPool();
+solverPool.setOnCompletion((opset) => {
+    console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
+    console.log(`Duration: ${opset.end - opset.start} ms`);
+    console.log(`Solutions:`);
+    console.log(opset.solutions)
+    solutions.value.clear();
+    for (let solution of opset.solutions) {
+        solutions.value.add(solution);
+    }
+});
+
+// console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
+// let numbers = [ 6, 8, 8, 11, 11, 23 ];
+// let target = 145728;
+
+let board = boardGenerator.generateBoard();
+
+solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
+solverPool.beginNext();
 
 
+game.generateGame(board);
 
 
-// let rangeMapper = new Map();
-// rangeMapper.set('0', 0);
-// rangeMapper.set('1-10', 0);
-// rangeMapper.set('11-40', 0);
-// rangeMapper.set('41-80', 0);
-// rangeMapper.set('81-200', 0);
-// rangeMapper.set('201+', 0);
-// const solver = new OpSetSolutionSolver(6);
-// for (let i = 0; i < 1; i++) {
-//     if (i % 500 === 0) {
-//         console.log(i);
-//     }
-//     solver.regenerate();
-//     const solution = solver.solve();
-//     if (solution.size === 0) {
-//         rangeMapper.set('0', rangeMapper.get('0') + 1);
-//         console.log('0: ');
-//         console.log(solver.target);
-//         console.log(solver.digits);
-//     } else if (solution.size >= 1 && solution.size <= 10) {
-//         rangeMapper.set('1-10', rangeMapper.get('1-10') + 1);
-//     } else if (solution.size >= 11 && solution.size <= 40) {
-//         rangeMapper.set('11-40', rangeMapper.get('11-40') + 1);
-//     } else if (solution.size >= 41 && solution.size <= 80) {
-//         rangeMapper.set('41-80', rangeMapper.get('41-80') + 1);
-//     } else if (solution.size >= 81 && solution.size <= 200) {
-//         rangeMapper.set('81-200', rangeMapper.get('81-200') + 1);
-//     } else if (solution.size >= 201) {
-//         rangeMapper.set('201+', rangeMapper.get('201+') + 1);
-//     }
-// }
-// console.log(rangeMapper);
-
-
-//console.log(solution);
-
-game.generateGame(8);
-
-const { digits, digitBoardIds, ops, expression, isDigitSelected, isOpSelected, isDigitDisabled } = storeToRefs(game);
 
 const digitBoard = computed(() => {
     return digitBoardIds.value.map((digId) => digits.value.get(digId));
 });
+
+function generateNewGame() {
+    let board = boardGenerator.generateBoard();
+    game.generateGame(board);
+    solverPool.clearQueue();
+    solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
+    if (solverPool.isInProgress()) {
+        solverPool.setAutoBeginNext(true);
+        solverPool.stopCurrentTask();
+    } else {
+        solverPool.beginNext();
+    }
+}
 
 function selectDigit(id) {
     if (isDigitDisabled.value(id)) {
@@ -129,9 +103,14 @@ function selectOp(id) {
             <h1>Ops Game</h1>
         </header>
         <main>
-            <section class="op-row">
+            <section>
+                <p>Rules here</p>
+                <button @click="generateNewGame()">New Game</button>
+                <p>Number of solutions: {{ solutions.size }}</p>
+            </section>
+            <section class="">
                 <div>
-                    <p class="op-target">145728</p>
+                    <p class="op-target">{{target}}</p>
                 </div>
             </section>
             <section class="op-row">
@@ -146,9 +125,14 @@ function selectOp(id) {
                     <OpButton value="&circlearrowright;" :disabled="!game.canFastForward" @click="game.fastForwardHistory()" />
                 </div>
             </section>
+            <section class="op-row">
+                <p v-for="action in completedActions">
+                    {{ action }}
+                </p>
+            </section>
         </main>
         <footer>
-            <p>Rules here</p>
+            
         </footer>
     </div>
 </template>
@@ -193,5 +177,6 @@ footer {
 }
 .op-target {
     font-size: 96px;
+    margin: 0px;
 }
 </style>

@@ -9,7 +9,7 @@
     })
 
     const config = ref({
-            size: 46,
+            size: 66,
             unit: 'px'
         });
 

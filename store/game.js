@@ -45,6 +45,8 @@ class OpsetExpressionGenerator {
 
 export const useGameStore = defineStore('game', {
     state: () => ({
+        solutions: new Set(),
+        target: 0,
         digitIdSeq: 0,
         digits: new Map(),
         digitBoardIds: [],
@@ -97,10 +99,15 @@ export const useGameStore = defineStore('game', {
                 }
 
             };
+        },
+        completedActions: (state) => {
+            return state.history.actions.slice(0, state.history.index + 1).map(historyAction => historyAction.readableExpression)
         }
     },
     actions: {
         reset() {
+            this.solutions.clear();
+            this.target = 0;
             this.digitIdSeq = 0;
             this.digits.clear();
             this.digitBoardIds.length = 0;
@@ -123,13 +130,17 @@ export const useGameStore = defineStore('game', {
             this.digitExpIdMap.set(key, digit.id);
             return digit;
         },
-        generateGame(numberOfDigits) {
+        generateGame(board) {
             this.reset();
 
+            console.log('Generating game with board:');
+            console.log(board);
             const opGenerator = new OpsetOpGenerator();
             this.ops = opGenerator.createSet('+', '-', '*', '/');
             
-            for (let num of [6, 8, 8, 11, 11, 23]) {
+            this.solutions.add(board.generatedSolution);
+            this.target = board.target;
+            for (let num of board.numbers) {
                 const digit = this.createDigit(num, null);
                 this.digits.set(digit.id, digit);
                 this.digitBoardIds.push(digit.id);
@@ -221,9 +232,12 @@ export const useGameStore = defineStore('game', {
                 const leftId = this.expression.left;
                 const rightIndex = this.digitBoardIds.indexOf(this.expression.right);
                 const leftIndex = this.digitBoardIds.indexOf(this.expression.left);
+
+                const expressionString = `${this.digits.get(this.expression.left).number} ${this.ops.get(this.expression.op).operation} ${this.digits.get(this.expression.right).number} = ${result}`;
                 
                 const historyItem = {
                     operation: [this.expression.left, this.expression.op, this.expression.right],
+                    readableExpression: expressionString,
                     execute(digitBoardIds) {
                         digitBoardIds[rightIndex] = newDigit.id;
                         digitBoardIds.splice(leftIndex, 1);
