@@ -32,7 +32,9 @@
         <div class="container mx-auto lg:px-24">
             <header></header>
             <main>
-                <slot />
+                <ClientOnly>
+                    <slot />
+                </ClientOnly>
             </main>
             <footer>
     

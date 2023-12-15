@@ -4,7 +4,7 @@
   "scripts": {
     "build": "./copy_worker_deps.sh && nuxt build",
     "dev": "./copy_worker_deps.sh && nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "./copy_worker_deps.sh && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
