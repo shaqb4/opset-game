@@ -3,8 +3,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: [
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode'
   ],
+  colorMode: {
+    preference: 'light', // default theme
+    dataValue: 'theme', // activate data-theme in <html> tag
+    classSuffix: '',
+  },
   routeRules: {
     '/': {
       headers: {

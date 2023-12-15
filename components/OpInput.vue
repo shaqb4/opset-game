@@ -8,11 +8,6 @@
         }
     })
 
-    const config = {
-        size: 60,
-        unit: 'px'
-    }
-
 </script>
 
 <script>
@@ -20,42 +15,21 @@
 </script>
 
 <template>
-    <span class="op-symbol" :class="{selected: selected}">{{ value }}</span>
+    <div class="op-symbol" :class="{selected: selected}">
+        <slot />
+    </div>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 .op-symbol {
-    display: inline-block;
-    border-radius: 50%;
-    border-style: dashed;
-    border-width: 3px;
-    width: v-bind(config.size+config.unit);
-    height: v-bind(config.size+config.unit);
-    line-height: v-bind(config.size+config.unit);
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
+    @apply border-black rounded-full font-bold align-middle flex items-center justify-center w-12 h-12 text-base bg-black text-white;
 }
 
-.op-symbol:hover:not(.selected) {
-    border-style: solid;
-}
-
-.op-symbol.selected:hover {
-    width: v-bind(config.size+config.unit);
-    height: v-bind(config.size+config.unit);
-    line-height: v-bind(config.size+config.unit);
-    background-clip: padding-box;
-    border-style: solid;
+.op-symbol:hover {
+    @apply cursor-pointer;
 }
 
 .op-symbol.selected {
-    background-color: green;
-    background-clip: padding-box;
-    border-style: none;
-    width: v-bind(config.size+6+'px');
-    height: v-bind(config.size+6+'px');
-    line-height: v-bind(config.size+6+'px');
-    font-size: 20px;
+    @apply bg-[green];
 }
 </style>

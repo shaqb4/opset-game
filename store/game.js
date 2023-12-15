@@ -16,17 +16,18 @@ class OpsetOpGenerator {
     constructor() {
     }
 
-    createSingle(id, operation) {
+    createSingle(id, operation, icon) {
         return {
             id,
-            operation
+            operation,
+            icon
         }
     }
 
     createSet(...operations) {
         const operationMap = new Map();
         for (let [index, op] of operations.entries()) {
-            const operation = this.createSingle(index, op);
+            const operation = this.createSingle(index, op[0], op[1]);
             operationMap.set(operation.id, operation);
         }
         return operationMap;
@@ -60,6 +61,12 @@ export const useGameStore = defineStore('game', {
         }
     }),
     getters: {
+        gameScore: (state) => {
+            let distanceFromTarget = Math.min(...state.digitBoardIds.map((id) => state.digits.get(id)).map(dig => Math.abs(state.target - dig.number)))
+            let percentage = (state.target - distanceFromTarget) / state.target;
+
+            return Math.floor(percentage * 10);
+        },
         canFastForward: (state) => {
             return state.history.index + 1 < state.history.actions.length;
         },
@@ -102,6 +109,12 @@ export const useGameStore = defineStore('game', {
         },
         completedActions: (state) => {
             return state.history.actions.slice(0, state.history.index + 1).map(historyAction => historyAction.readableExpression)
+        },
+        solutionActions: (state) => {
+            if (state.solutions?.values()?.next()?.value?.split) {
+                return state.solutions?.values()?.next()?.value?.split(',');
+            }
+            return [];
         }
     },
     actions: {
@@ -136,7 +149,7 @@ export const useGameStore = defineStore('game', {
             console.log('Generating game with board:');
             console.log(board);
             const opGenerator = new OpsetOpGenerator();
-            this.ops = opGenerator.createSet('+', '-', '*', '/');
+            this.ops = opGenerator.createSet(['+', 'i-gravity-ui-plus'], ['-', 'i-gravity-ui-minus'], ['*', 'i-gravity-ui-xmark'], ['/', 'i-tabler-divide']);
             
             this.solutions.add(board.generatedSolution);
             this.target = board.target;

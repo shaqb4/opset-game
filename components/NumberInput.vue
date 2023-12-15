@@ -12,11 +12,6 @@
         }
     })
 
-    const config = {
-        size: 60,
-        unit: 'px'
-    }
-
 </script>
 
 <script>
@@ -24,52 +19,30 @@
 </script>
 
 <template>
-    <span class="op-number" :class="{selected: selected, disabled: disabled}">{{ value }}</span>
+    <div class="op-number" :class="{selected: selected, disabled: disabled}">{{ value }}</div>
 </template>
 
-<style scoped>
+<style lang="postcss" scoped>
 .op-number {
-    display: inline-block;
-    border-radius: 50%;
-    border-style: dashed;
-    border-width: 3px;
-    width: v-bind(config.size+config.unit);
-    height: v-bind(config.size+config.unit);
-    line-height: v-bind(config.size+config.unit);
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
+    @apply border-black rounded-full border-dashed  font-bold align-middle flex items-center justify-center w-20 h-20 text-base border-[3px];
 }
 
 .op-number:hover:not(.selected):not(.disabled) {
-    border-style: solid;
+    /* @apply border-solid;  */
 }
-
-.op-number.selected:hover:not(.disabled) {
-    width: v-bind(config.size+config.unit);
-    height: v-bind(config.size+config.unit);
-    line-height: v-bind(config.size+config.unit);
-    background-clip: padding-box;
-    border-style: solid;
+.op-number:hover {
+    @apply cursor-pointer;
 }
 
 .op-number.selected:not(.disabled) {
-    background-color: green;
-    background-clip: padding-box;
-    border-style: none;
-    width: v-bind(config.size+6+'px');
-    height: v-bind(config.size+6+'px');
-    line-height: v-bind(config.size+6+'px');
-    font-size: 20px;
+    @apply bg-[green] text-lg border-none;
 }
 
 .op-number.disabled {
-    border-color: gray;
-    background-color: lightgray;
-    color: gray;
+    @apply border-gray-600 bg-gray-300 text-gray-600;
 }
 
 .op-number.disabled:hover {
-    cursor: not-allowed;
+    @apply cursor-not-allowed;
 }
 </style>
