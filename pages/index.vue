@@ -114,7 +114,7 @@ function selectOp(id) {
 
 <template>
     <div role="tablist" class="tabs tabs-lifted">
-        <input type="radio" name="opset_tabs" role="tab" class="tab" aria-label="Play" checked />
+        <input type="radio" name="opset_tabs" role="tab" class="tab min-w-max" aria-label="Play" checked />
         <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
             <section class="flex flex-wrap justify-center">
                 <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-between">
@@ -225,71 +225,15 @@ function selectOp(id) {
                             {{ action }}
                         </li>
                     </ol>
-                    <!-- <div class="w-1/2">
-                        <p class="mb-2">
-                            Solution  
-                            <button @click="viewSolution = !viewSolution" class="btn btn-ghost btn-xs btn-square">
-                                <span v-if="!viewSolution" class="i-gravity-ui-eye"></span>
-                                <span v-else class="i-gravity-ui-eye-slash"></span>
-                            </button>
-                        </p>
-                        <div v-if="viewSolution">
-                            <ol  class="list-decimal list-inside text-red-500">
-                                <li v-for="action in solutionActions">
-                                    {{ action }}
-                                </li>
-                            </ol>
-                        </div>
-                    </div> -->
                 </div>
             </section>
         </div>
 
-        <input type="radio" name="opset_tabs" role="tab" class="tab" aria-label="Solution Generator" />
+        <input type="radio" name="opset_tabs" role="tab" class="tab min-w-max" aria-label="Solution Generator" />
         <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">Tab content 2</div>
     </div>
 </template>
 
 <style  scoped>
-/* #container {
-    height: calc(100vh - 16px);
-    margin: 0;
-    display: grid;
-    gap: 20px;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas: 
-        "header"
-        "main"
-        "footer"
-    ;
-}
 
-header {
-    grid-area: header;
-    min-height: 100px;
-}
-
-main {
-    grid-area: main;
-}
-
-footer {
-    grid-area: footer;
-    min-height: 150px;
-}
-
-.op-row {
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.op-row > div {
-    display: flex;
-    gap: 20px;
-}
-.op-target {
-    font-size: 96px;
-    margin: 0px;
-} */
 </style>
