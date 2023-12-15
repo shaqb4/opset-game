@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <h2>Multiplayer version will go here</h2>
+        <h2>A multiplayer version of OpSet is coming soon...</h2>
     </div>
 </template>
 

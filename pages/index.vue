@@ -153,7 +153,14 @@ function selectOp(id) {
                                 </form>
                                 <article class="prose">
                                     <h2>Rules</h2>
+                                    <h3>How to Play</h3>
                                     <p>Calculate the target number using the given set of numbers and the mathematical operations <span class="i-gravity-ui-plus"></span>, <span class="i-gravity-ui-minus"></span>, <span class="i-gravity-ui-xmark"></span> and <span class="i-tabler-divide"></span>.</p>
+                                    <h3>Scoring</h3>
+                                    <p>
+                                        Your score depends on how close you are to the target number, based on what percentage your closest number is to the target. For example, pretend the target number is 100.
+                                        An exact match would be a perfect score of 10, while a closest number of 90-99 would be a score of 9, 80-89 would be 8, etc.
+                                        Note this is a work in progress, so the scoring system may change in the future.
+                                    </p>
                                 </article>
                             </div>
                             <form method="dialog" class="modal-backdrop">
@@ -170,7 +177,7 @@ function selectOp(id) {
                                 </form>
                                 <article class="prose">
                                     <h2>Settings</h2>
-                                    <p>Some settings...</p>
+                                    <p>Game settings will appear here. Check back soon.</p>
                                 </article>
                             </div>
                             <form method="dialog" class="modal-backdrop">

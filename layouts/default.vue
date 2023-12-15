@@ -18,7 +18,7 @@
                                 <li><a href="/multiplayer">Multiplayer</a></li>
                             </ul>
                         </div>
-                        <a class="btn btn-ghost px-0 text-xl">OpSet Games</a>
+                        <a class="btn btn-ghost px-0 text-xl" href="/">OpSet Games</a>
                     </div>
                     <div class="navbar-end hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
