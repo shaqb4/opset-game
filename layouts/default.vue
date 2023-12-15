@@ -13,7 +13,7 @@
                                 </svg>
                             </div>
                             <ul tabindex="0"
-                                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white rounded-box w-52 ">
+                                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-[#284A52] rounded-box w-52 ">
                                 <li><a href="/">Solo</a></li>
                                 <li><a href="/multiplayer">Multiplayer</a></li>
                             </ul>
