@@ -5,8 +5,12 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/color-mode'
+    '@nuxtjs/color-mode',
+    '@nuxtjs/robots'
   ],
+  robots: {
+    /* module options */
+  },
   colorMode: {
     preference: 'light', // default theme
     dataValue: 'theme', // activate data-theme in <html> tag

@@ -127,7 +127,7 @@ function selectOp(id) {
                     </div>
                     <div>
                         <div class="tooltip" data-tip="Solution">
-                            <button class="btn btn-ghost btn-sm btn-square" onclick="hint_modal.showModal()"><span class="i-tabler-bulb w-6 h-6"></span></button>
+                            <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="hint_modal.showModal()" aria-label="Game solution"><span class="i-tabler-bulb w-8 h-8 sm:w-6 sm:h-6"></span></button>
                         </div>
                         <dialog id="hint_modal" class="modal">
                             <div class="modal-box bg-gray-100">
@@ -148,7 +148,7 @@ function selectOp(id) {
                             </form>
                         </dialog>
                         <div class="tooltip" data-tip="Rules">
-                            <button class="btn btn-ghost btn-sm btn-square" onclick="info_modal.showModal()"><span class="i-gravity-ui-circle-info-fill w-6 h-6"></span></button>
+                            <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="info_modal.showModal()" aria-label="Game information"><span class="i-gravity-ui-circle-info-fill w-8 h-8 sm:w-6 sm:h-6"></span></button>
                         </div>
                         <dialog id="info_modal" class="modal">
                             <div class="modal-box bg-gray-100">
@@ -172,7 +172,7 @@ function selectOp(id) {
                             </form>
                         </dialog>
                         <div class="tooltip" data-tip="Settings">
-                            <button class="btn btn-ghost btn-sm btn-square" onclick="settings_modal.showModal()"><span class="i-mdi-cog w-6 h-6"></span></button>
+                            <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="settings_modal.showModal()" aria-label="Game settings"><span class="i-mdi-cog w-8 h-8 sm:w-6 sm:h-6"></span></button>
                         </div>
                         <dialog id="settings_modal" class="modal">
                             <div class="modal-box bg-gray-100">
