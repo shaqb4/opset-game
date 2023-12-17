@@ -26,12 +26,14 @@
     @apply cursor-pointer;
 }
 
-.op-button:hover:not(.disabled) {
-    @apply bg-red-300;
+@media (hover: hover) {
+    .op-button:hover:not(.disabled) {
+        @apply bg-red-300;
+    }
 }
 
 .op-button:active:not(.disabled) {
-    @apply bg-red-300 text-xl;
+    @apply text-xl;
 }
 
 .op-button.disabled {
