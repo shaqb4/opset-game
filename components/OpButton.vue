@@ -26,7 +26,7 @@
     @apply cursor-pointer;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
     .op-button:hover:not(.disabled) {
         @apply bg-red-300;
     }
