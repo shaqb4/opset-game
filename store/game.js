@@ -7,7 +7,8 @@ class OpsetDigitGenerator {
     createSingle(id, number) {
         return {
             id,
-            number
+            number,
+            isActiveOnBoard: false
         }
     }
 }
@@ -155,6 +156,7 @@ export const useGameStore = defineStore('game', {
             this.target = board.target;
             for (let num of board.numbers) {
                 const digit = this.createDigit(num, null);
+                digit.isActiveOnBoard = true;
                 this.digits.set(digit.id, digit);
                 this.digitBoardIds.push(digit.id);
             }
@@ -200,7 +202,7 @@ export const useGameStore = defineStore('game', {
             }
 
             const action = this.history.actions[this.history.index];
-            action.undo(this.digitBoardIds);
+            action.undo(this.digitBoardIds, this.digits);
             this.history.index--;
             this.unsetAll();
         },
@@ -211,7 +213,7 @@ export const useGameStore = defineStore('game', {
 
             this.history.index++;
             const action = this.history.actions[this.history.index];
-            action.execute(this.digitBoardIds);
+            action.execute(this.digitBoardIds, this.digits);
             this.unsetAll();
         },
         evalExpression() {
@@ -243,20 +245,24 @@ export const useGameStore = defineStore('game', {
 
                 const rightId = this.expression.right;
                 const leftId = this.expression.left;
-                const rightIndex = this.digitBoardIds.indexOf(this.expression.right);
-                const leftIndex = this.digitBoardIds.indexOf(this.expression.left);
+                const rightIndex = this.digitBoardIds.indexOf(rightId);
+                const leftIndex = this.digitBoardIds.indexOf(leftId);
 
-                const expressionString = `${this.digits.get(this.expression.left).number} ${this.ops.get(this.expression.op).operation} ${this.digits.get(this.expression.right).number} = ${result}`;
+                const expressionString = `${this.digits.get(leftId).number} ${this.ops.get(this.expression.op).operation} ${this.digits.get(rightId).number} = ${result}`;
                 
                 const historyItem = {
-                    operation: [this.expression.left, this.expression.op, this.expression.right],
+                    operation: [leftId, this.expression.op, rightId],
                     readableExpression: expressionString,
-                    execute(digitBoardIds) {
+                    execute(digitBoardIds, digits) {
+                        digits.get(leftId).isActiveOnBoard = false;
+                        digits.get(rightId).isActiveOnBoard = false;
+                        newDigit.isActiveOnBoard = true;
                         digitBoardIds[rightIndex] = newDigit.id;
-                        digitBoardIds.splice(leftIndex, 1);
                     },
-                    undo(digitBoardIds) {
-                        digitBoardIds.splice(leftIndex, 0, leftId);
+                    undo(digitBoardIds, digits) {
+                        digits.get(rightId).isActiveOnBoard = true;
+                        digits.get(leftId).isActiveOnBoard = true;
+                        newDigit.isActiveOnBoard = false;
                         digitBoardIds[rightIndex] = rightId;
                     }
                 };

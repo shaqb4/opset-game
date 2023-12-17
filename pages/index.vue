@@ -192,7 +192,7 @@ function selectOp(id) {
                         <p>Score: {{ gameScore }}/10</p>
                     </div>
                     <div class="grid grid-cols-3-20 lg:grid-cols-6-20 gap-2 place-content-center">
-                        <NumberInput v-for="(dig, index) in digitBoard" :key="`digit-${dig.id}`" :id="`digit-${dig.id}`" :value="dig.number" :selected="isDigitSelected(dig.id)" :disabled="isDigitDisabled(dig.id)" @click="selectDigit(dig.id)" />
+                        <NumberInput v-for="(dig, index) in digitBoard" :key="`digit-${dig.id}`" :id="`digit-${dig.id}`" :value="dig.number" :selected="isDigitSelected(dig.id)" :disabled="isDigitDisabled(dig.id)" :active="dig.isActiveOnBoard" @click="selectDigit(dig.id)" />
                     </div>
                     <div class="grid grid-cols-6-12 gap-1 place-content-center ">
                         <OpButton class="" value="&circlearrowleft;" :disabled="!game.canRewind" @click="game.rewindHistory()" />

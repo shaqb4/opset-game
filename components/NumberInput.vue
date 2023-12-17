@@ -9,6 +9,10 @@
         selected: {
             type: Boolean,
             default: false
+        },
+        active: {
+            type: Boolean,
+            default: false
         }
     })
 
@@ -19,17 +23,24 @@
 </script>
 
 <template>
-    <div class="op-number" :class="{selected: selected, disabled: disabled}">{{ value }}</div>
+    <span class="op-number-wrapper" :class="{active: active}">
+        <div class="op-number" :class="{selected: selected, disabled: disabled, active: active}">{{ value }}</div>
+    </span>
 </template>
 
 <style lang="postcss" scoped>
+.op-number-wrapper:not(.active) {
+    @apply w-20 h-20;
+}
+
 .op-number {
     @apply border-black rounded-full border-dashed  font-bold align-middle flex items-center justify-center w-20 h-20 text-base border-[3px];
 }
 
-.op-number:hover:not(.selected):not(.disabled) {
-    /* @apply border-solid;  */
+.op-number:not(.active) {
+    @apply hidden;
 }
+
 .op-number:hover {
     @apply cursor-pointer;
 }
