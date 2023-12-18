@@ -6,10 +6,11 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
-    '@nuxtjs/robots'
+    'nuxt-simple-robots',
+    'nuxt-simple-sitemap'
   ],
-  robots: {
-    /* module options */
+  site: {
+    url: 'https://opset.games',
   },
   colorMode: {
     preference: 'light', // default theme
