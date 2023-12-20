@@ -1,7 +1,12 @@
 const { iconsPlugin, getIconCollections } = require("@egoist/tailwindcss-icons")
 
 module.exports = {
-  plugins: [require('@tailwindcss/typography'), iconsPlugin({collections: getIconCollections(["gravity-ui", "tabler", "mdi"])}), require('daisyui')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    iconsPlugin({collections: getIconCollections(["gravity-ui", "tabler", "mdi"])}),
+    require('@tailwindcss/forms'),
+    require('daisyui')
+  ],
   theme: {
     extend: {
       gridTemplateColumns: {

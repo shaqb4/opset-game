@@ -1,8 +1,9 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 import NumberInput from '~/components/NumberInput'
 import OpInput from '~/components/OpInput'
 import OpButton from '~/components/OpButton'
+import GameSettingsForm from '~/components/GameSettingsForm'
 import { useGameStore } from '~/store/game'
 import { storeToRefs } from 'pinia'
 import { OpSetSolutionSolver } from '~/lib/solutionSolver'
@@ -13,33 +14,39 @@ const game = useGameStore();
 
 const { gameScore, solutions, target, digits, digitBoardIds, ops, expression, isDigitSelected, isOpSelected, isDigitDisabled, completedActions, solutionActions } = storeToRefs(game);
 
-let boardGenConfig = new OpSetBoardConfig(6, 25, 3, 33);
+
+let gameSettings = reactive({
+    boardSize: 6,
+    maxNumber: 25,
+    minOpCount: 3,
+    chanceOfOp: 33,
+    minTargetValue: 60,
+    maxTargetValue: 999
+});
+
+let boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
 let boardGenerator = new OpSetBoardGenerator(boardGenConfig);
 
-    let solverPool = new SolverPool();
-    solverPool.setOnCompletion((opset) => {
-        console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
-        console.log(`Duration: ${opset.end - opset.start} ms`);
-        console.log(`Solutions:`);
-        console.log(opset.solutions)
-        solutions.value.clear();
-        for (let solution of opset.solutions) {
-            solutions.value.add(solution);
-        }
-    });
-    
-    // console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
-    // let numbers = [ 6, 8, 8, 11, 11, 23 ];
-    // let target = 145728;
-    
-    let board = boardGenerator.generateBoard();
-    
-    // solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
-    // solverPool.beginNext();
-    
-    
-    game.generateGame(board);
+let solverPool = new SolverPool();
+solverPool.setOnCompletion((opset) => {
+    console.log(`Finished generating solutions for numbers: ${opset.numbers} and target: ${opset.target}`);
+    console.log(`Duration: ${opset.end - opset.start} ms`);
+    console.log(`Solutions:`);
+    console.log(opset.solutions)
+    solutions.value.clear();
+    for (let solution of opset.solutions) {
+        solutions.value.add(solution);
+    }
+});
 
+// console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
+// let numbers = [ 6, 8, 8, 11, 11, 23 ];
+// let target = 145728;
+
+// let board = boardGenerator.generateBoard();
+
+// solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
+// solverPool.beginNext();
 
 const iconClassMap = {
     "i-gravity-ui-plus": "i-gravity-ui-plus",
@@ -48,7 +55,7 @@ const iconClassMap = {
     "i-tabler-divide": "i-tabler-divide"
 }
 
-let viewSolution = ref(false);
+let isLoading = ref(false);
 
 watch(gameScore, (newGameScore) => {
     if (newGameScore === 10) {
@@ -61,9 +68,28 @@ const digitBoard = computed(() => {
 });
 
 function generateNewGame() {
-    let board = boardGenerator.generateBoard();
-    viewSolution.value = false;
-    game.generateGame(board);
+    isLoading.value = true;
+    const worker = new Worker('/generatorWorker.js', { type: "module" });
+    let timoutId = setTimeout(() => {
+        worker.terminate();
+        console.log('Timed out...');
+        isLoading.value = false;
+    }, 5000);
+
+    worker.postMessage({
+        boardConfig: boardGenConfig
+    });
+
+    worker.onmessage = (event) => {
+        game.generateGame(event.data.board);
+        isLoading.value = false;
+        worker.terminate();
+        clearTimeout(timoutId);
+    };
+
+    // let board = boardGenerator.generateBoard();
+    // game.generateGame(board);
+
     // solverPool.clearQueue();
     // solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
     // if (solverPool.isInProgress()) {
@@ -73,6 +99,16 @@ function generateNewGame() {
     //     solverPool.beginNext();
     // }
 }
+
+function applyGameSettings() {
+    settings_modal.close();
+    boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
+    boardGenerator = new OpSetBoardGenerator(boardGenConfig);
+
+    generateNewGame();
+}
+
+generateNewGame();
 
 function selectDigit(dig) {
     if (!dig.isActiveOnBoard) {
@@ -179,10 +215,12 @@ function selectOp(id) {
                                 <form method="dialog">
                                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                 </form>
-                                <article class="prose">
-                                    <h2>Settings</h2>
-                                    <p>Game settings will appear here. Check back soon.</p>
-                                </article>
+                                <div>
+                                    <h2 class="text-2xl font-bold">Settings</h2>
+                                    <div>
+                                        <GameSettingsForm @submit.prevent="applyGameSettings" v-model:boardSize.number="gameSettings.boardSize" v-model:maxNumber.number="gameSettings.maxNumber" v-model:minTargetValue.number="gameSettings.minTargetValue" v-model:maxTargetValue.number="gameSettings.maxTargetValue" />
+                                    </div>
+                                </div>
                             </div>
                             <form method="dialog" class="modal-backdrop">
                                 <button>Close</button>
@@ -190,6 +228,13 @@ function selectOp(id) {
                         </dialog>
                     </div>
                 </div>
+            </section>
+            <section v-if="isLoading" class="flex flex-wrap justify-center">
+                <div  class="w-full lg:w-2/3 min-h-fit flex justify-center">
+                    <span class="loading loading-spinner loading-lg"></span>
+                </div>
+            </section>
+            <section v-else class="flex flex-wrap justify-center">
                 <div class="w-full lg:w-2/3 flex flex-col gap-8">
                     <div class="flex flex-col items-center pt-3">
                         <p class="text-4xl font-bold">{{ target }}</p>
@@ -226,8 +271,6 @@ function selectOp(id) {
                         </dialog>
                     </div>
                 </div>
-            </section>
-            <section class="flex flex-wrap justify-center">
                 <div class="divider after:bg-gray-200 before:bg-gray-200 w-full lg:w-2/3"></div> 
                 <div class="w-full lg:w-2/3 space-y-3 py-3">
                     <p class="">Actions</p>
@@ -237,6 +280,9 @@ function selectOp(id) {
                         </li>
                     </ol>
                 </div>
+            </section>
+            <section class="flex flex-wrap justify-center">
+                
             </section>
         </div>
 

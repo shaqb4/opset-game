@@ -1,4 +1,3 @@
-
 <script setup>
     const props = defineProps({
         value: Number,
@@ -15,10 +14,6 @@
             default: false
         }
     })
-
-</script>
-
-<script>
 
 </script>
 
