@@ -167,8 +167,8 @@ function selectOp(id) {
                         <button class="btn btn-primary" @click="generateNewGame()">New Game</button>
                     </div>
                     <div>
-                        <div class="tooltip" data-tip="Solution">
-                            <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="hint_modal.showModal()" aria-label="Game solution"><span class="i-tabler-bulb w-8 h-8 sm:w-6 sm:h-6"></span></button>
+                        <div class="tooltip" :class="{'tooltip-disabled': showTimedOutMessage || solutionActions.length === 0}" data-tip="Solution">
+                            <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" :class="{'btn-disabled': showTimedOutMessage || solutionActions.length === 0}" onclick="hint_modal.showModal()" aria-label="Game solution"><span class="i-tabler-bulb w-8 h-8 sm:w-6 sm:h-6 tooltip-icon"></span></button>
                         </div>
                         <dialog id="hint_modal" class="modal">
                             <div class="modal-box bg-gray-100">
@@ -250,12 +250,12 @@ function selectOp(id) {
                         <div class="prose max-w-none">
                             <h3>Oops!</h3>
                             <p>
-                                Five seconds passed and a new game couldn't be generated that matched your game settings. If game generation continues to fail, try making the settings broader.
+                                A new game couldn't be generated that matched your game settings. If game generation continues to fail, try making the settings broader.
                             </p>
                             <h3>Why did this happen?</h3>
                             <p>
-                                Game boards are created by randomly generating board numbers within the Number Range setting and randomly applying the <span class="i-gravity-ui-plus"></span>, <span class="i-gravity-ui-minus"></span>, <span class="i-gravity-ui-xmark"></span> and <span class="i-tabler-divide"></span> operations to these numbers. 
-                                For lack of a better strategy, the game generator simply keeps generating games until one is created with a target matching the Target Range setting. For most cases, this is pretty quick!
+                                Game boards are created by randomly generating numbers within the Number Range setting and randomly applying the <span class="i-gravity-ui-plus"></span>, <span class="i-gravity-ui-minus"></span>, <span class="i-gravity-ui-xmark"></span> and <span class="i-tabler-divide"></span> operations to these numbers. 
+                                For lack of a better strategy, the generator simply keeps generating games until one is created with a target matching the Target Range setting. For most cases, this is pretty quick!
                                 But sometimes, if you're unlucky, or if the game settings are very specific or hard to match, it may take a long time. Therefore, a hard limit of 5 seconds was set, after which you can either try again or change the settings.
                             </p>
                         </div>
@@ -319,6 +319,12 @@ function selectOp(id) {
     </div>
 </template>
 
-<style  scoped>
+<style lang="postcss" scoped>
+    .tooltip-disabled:hover {
+        @apply cursor-not-allowed;
+    }
 
+    .tooltip > .btn-disabled > .tooltip-icon {
+        @apply bg-gray-300;
+    }
 </style>
