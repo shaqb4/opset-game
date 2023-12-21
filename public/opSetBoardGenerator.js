@@ -6,8 +6,9 @@ class OpSetBoardConfig {
      * @param {integer} minOpCount When generating, use at least this many operations to calculate a target. Must be less than maxNumber and greater than 0
      * @param {integer} chanceOfOp Percent chance of doing an operation after the minimum number of operations has been done. Must be 0 to 100;
      */
-    constructor(size = 6, maxNumber = 25, minOpCount = 3, chanceOfOp = 33, minTargetValue = 60, maxTargetValue = 999) {
+    constructor(size = 6, minNumber = 1, maxNumber = 25, minOpCount = 3, chanceOfOp = 33, minTargetValue = 60, maxTargetValue = 999) {
         this.size = size;
+        this.minNumber = minNumber;
         this.maxNumber = maxNumber;
         this.minOpCount = minOpCount;
         this.chanceOfOp = chanceOfOp;
@@ -39,7 +40,7 @@ class OpSetBoardGenerator {
         let result = -1;
         let opCount = 0;
         while (numbers.length < this.config.size) {
-            let num = Math.floor(Math.random() * this.config.maxNumber) + 1;
+            let num = Math.floor(Math.random() * (this.config.maxNumber + 1 - this.config.minNumber)) + this.config.minNumber;
             if (numbers.length === 0) {
                 result = num;
                 numbers.push(num);

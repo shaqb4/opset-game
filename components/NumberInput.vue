@@ -25,11 +25,11 @@
 
 <style lang="postcss" scoped>
 .op-number-wrapper:not(.active) {
-    @apply w-20 h-20;
+    @apply w-24 h-24;
 }
 
 .op-number {
-    @apply border-black rounded-full border-dashed  font-bold align-middle flex items-center justify-center w-20 h-20 text-base border-[3px];
+    @apply border-black rounded-full border-dashed  font-bold align-middle flex items-center justify-center w-24 h-24 lg:w-22 lg:h-22 text-base border-[3px];
 }
 
 .op-number:not(.active) {

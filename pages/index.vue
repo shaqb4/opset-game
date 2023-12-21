@@ -17,6 +17,7 @@ const { gameScore, solutions, target, digits, digitBoardIds, ops, expression, is
 
 let gameSettings = reactive({
     boardSize: 6,
+    minNumber: 1,
     maxNumber: 25,
     minOpCount: 3,
     chanceOfOp: 33,
@@ -24,7 +25,7 @@ let gameSettings = reactive({
     maxTargetValue: 999
 });
 
-let boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
+let boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.minNumber, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
 let boardGenerator = new OpSetBoardGenerator(boardGenConfig);
 
 let solverPool = new SolverPool();
@@ -67,13 +68,17 @@ const digitBoard = computed(() => {
     return digitBoardIds.value.map((digId) => digits.value.get(digId));
 });
 
+let showTimedOutMessage = ref(false);
+
 function generateNewGame() {
     isLoading.value = true;
+    showTimedOutMessage.value = false;
     const worker = new Worker('/generatorWorker.js', { type: "module" });
     let timoutId = setTimeout(() => {
         worker.terminate();
         console.log('Timed out...');
         isLoading.value = false;
+        showTimedOutMessage.value = true;
     }, 5000);
 
     worker.postMessage({
@@ -102,7 +107,7 @@ function generateNewGame() {
 
 function applyGameSettings() {
     settings_modal.close();
-    boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
+    boardGenConfig = new OpSetBoardConfig(gameSettings.boardSize, gameSettings.minNumber, gameSettings.maxNumber, gameSettings.minOpCount, gameSettings.chanceOfOp, gameSettings.minTargetValue, gameSettings.maxTargetValue);
     boardGenerator = new OpSetBoardGenerator(boardGenConfig);
 
     generateNewGame();
@@ -218,7 +223,12 @@ function selectOp(id) {
                                 <div>
                                     <h2 class="text-2xl font-bold">Settings</h2>
                                     <div>
-                                        <GameSettingsForm @submit.prevent="applyGameSettings" v-model:boardSize.number="gameSettings.boardSize" v-model:maxNumber.number="gameSettings.maxNumber" v-model:minTargetValue.number="gameSettings.minTargetValue" v-model:maxTargetValue.number="gameSettings.maxTargetValue" />
+                                        <GameSettingsForm @submit.prevent="applyGameSettings"
+                                            v-model:boardSize.number="gameSettings.boardSize" 
+                                            v-model:minNumber.number="gameSettings.minNumber" 
+                                            v-model:maxNumber.number="gameSettings.maxNumber" 
+                                            v-model:minTargetValue.number="gameSettings.minTargetValue" 
+                                            v-model:maxTargetValue.number="gameSettings.maxTargetValue" />
                                     </div>
                                 </div>
                             </div>
@@ -234,13 +244,31 @@ function selectOp(id) {
                     <span class="loading loading-spinner loading-lg"></span>
                 </div>
             </section>
+            <section v-else-if="showTimedOutMessage" class="flex flex-wrap justify-center">
+                <div class="w-full lg:w-2/3 flex flex-col gap-8">
+                    <div role="alert" class="alert alert-error">
+                        <div class="prose max-w-none">
+                            <h3>Oops!</h3>
+                            <p>
+                                Five seconds passed and a new game couldn't be generated that matched your game settings. If game generation continues to fail, try making the settings broader.
+                            </p>
+                            <h3>Why did this happen?</h3>
+                            <p>
+                                Game boards are created by randomly generating board numbers within the Number Range setting and randomly applying the <span class="i-gravity-ui-plus"></span>, <span class="i-gravity-ui-minus"></span>, <span class="i-gravity-ui-xmark"></span> and <span class="i-tabler-divide"></span> operations to these numbers. 
+                                For lack of a better strategy, the game generator simply keeps generating games until one is created with a target matching the Target Range setting. For most cases, this is pretty quick!
+                                But sometimes, if you're unlucky, or if the game settings are very specific or hard to match, it may take a long time. Therefore, a hard limit of 5 seconds was set, after which you can either try again or change the settings.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <section v-else class="flex flex-wrap justify-center">
                 <div class="w-full lg:w-2/3 flex flex-col gap-8">
                     <div class="flex flex-col items-center pt-3">
                         <p class="text-4xl font-bold">{{ target }}</p>
                         <p>Score: {{ gameScore }}/10</p>
                     </div>
-                    <div class="grid grid-cols-3-20 lg:grid-cols-6-20 gap-2 place-content-center">
+                    <div class="grid grid-cols-3-24 justify-center lg:grid-cols-6-22 gap-2 content-center">
                         <NumberInput v-for="(dig, index) in digitBoard" :key="`digit-${dig.id}`" :id="`digit-${dig.id}`" :value="dig.number" :selected="isDigitSelected(dig.id)" :disabled="isDigitDisabled(dig.id)" :active="dig.isActiveOnBoard" @click="selectDigit(dig)" />
                     </div>
                     <div class="grid grid-cols-6-12 gap-1 place-content-center ">
