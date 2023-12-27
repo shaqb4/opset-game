@@ -1,6 +1,5 @@
 <script setup>
     const props = defineProps({
-        value: Number,
         boardSize: {
             type: Number,
             default: 6

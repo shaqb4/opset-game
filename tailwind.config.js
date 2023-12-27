@@ -3,7 +3,7 @@ const { iconsPlugin, getIconCollections } = require("@egoist/tailwindcss-icons")
 module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
-    iconsPlugin({collections: getIconCollections(["gravity-ui", "tabler", "mdi"])}),
+    iconsPlugin({collections: getIconCollections(["gravity-ui", "tabler", "mdi", "ooui"])}),
     require('@tailwindcss/forms'),
     require('daisyui')
   ],
@@ -37,7 +37,15 @@ module.exports = {
     themes: [
       {
         mytheme: {
-
+          /*"primary": "#0079ff",
+          "secondary": "#00d1ff",
+          "accent": "#009700",
+          "neutral": "#0b0b0b",
+          "base-100": "#fff9fb",
+          "info": "#0092b3",
+          "success": "#80d700",
+          "warning": "#f95400",
+          "error": "#ff216b",*/
         }
       }
     ]
