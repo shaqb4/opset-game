@@ -85,7 +85,7 @@
 
 <template>
     <div class="flex gap-16 justify-center">
-        <div class="w-full lg:w-2/3">
+        <div class="w-full">
             <div class="flex justify-end">
                 <div class="tooltip" data-tip="Solutions settings">
                     <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="solutions_settings_modal.showModal()" aria-label="Solution settings"><span class="i-mdi-cog w-8 h-8 sm:w-6 sm:h-6"></span></button>
@@ -130,9 +130,9 @@
             <div>
                 <section>
                     <h3 class="text-lg font-bold mb-2">Solutions</h3>
-                    <p v-if="isGenerating" class="mb-2"><button @click="stopGenerating" class="btn btn-ghost p-0 min-h-0 h-auto w-auto mr-2 btn-lg"><span class="i-ooui-stop"></span> Stop Generating</button></p>
-                    <p class="mb-6">{{ distinctSolutions.size }} solutions have been found</p>
-                    <div v-if="distinctSolutions.size === 0 && !isGenerating" role="alert" class="alert alert-info">
+                    <p v-if="isGenerating" class="mb-2"><button @click="stopGenerating" class="btn btn-ghost p-0 min-h-0 h-auto w-auto mr-2 btn-lg text-red-600"><span class="i-ooui-stop"></span> Stop Generating</button></p>
+                    <p v-if="distinctSolutions.size > 0 || isGenerating" class="mb-6">{{ distinctSolutions.size }} solutions have been found</p>
+                    <div v-else role="alert" class="alert alert-info">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span>Click on the settings icon to choose what board to solve.</span>
                     </div>
@@ -150,10 +150,10 @@
                                     <tbody>
                                         <tr v-for="(solution, index) in currentPageSolutions" class="divide-x divide-black">
                                             <th class="max-w-[6rem] text-center">{{ index + (solutionPage * solutionPerPage) }}</th>
-                                            <td class="flex flex-wrap gap-x-1 gap-y-2">
-                                                <div v-for="(action, index) in solution" class="space-x-1">
+                                            <td class="flex flex-nowrap md:flex-wrap gap-x-1 gap-y-2">
+                                                <div v-for="(action, index) in solution" class="flex flex-nowrap gap-x-1">
                                                     <span v-if="index > 0" class="i-mdi-arrow-right-thin text-base"></span>
-                                                    <span class="badge badge-accent rounded">{{ action }}</span>
+                                                    <span class="badge badge-accent rounded whitespace-nowrap">{{ action }}</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -162,7 +162,7 @@
                             </div>
                             <div class="join">
                                 <button :disabled="solutionPage <= 0" @click="solutionPage--" class="join-item btn btn-page"><span class="i-ooui-previous-ltr"></span></button>
-                                <button disabled class="join-item btn">Page {{ solutionPage }}</button>
+                                <button disabled class="join-item btn">{{ solutionPage }}</button>
                                 <button :disabled="(solutionPage + 1) * solutionPerPage >= solutionActions.length" @click="solutionPage++" class="join-item btn btn-page"><span class="i-ooui-next-ltr"></span></button>
                             </div>
                         </div>
@@ -188,5 +188,9 @@
 
 .btn-page:disabled {
     @apply bg-gray-300 text-gray-600 cursor-not-allowed pointer-events-auto;
+}
+
+.solution-table {
+    @apply max-w-[calc(100vw-3rem)] w-auto;
 }
 </style>

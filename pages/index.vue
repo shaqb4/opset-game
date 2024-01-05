@@ -160,7 +160,7 @@ function selectOp(id) {
 <template>
     <div role="tablist" class="tabs tabs-lifted">
         <input type="radio" name="opset_tabs" role="tab" class="tab min-w-max" aria-label="Play" checked />
-        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6 w-full">
             <section class="flex flex-wrap justify-center">
                 <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-between">
                     <div>
@@ -315,7 +315,7 @@ function selectOp(id) {
         </div>
 
         <input type="radio" name="opset_tabs" role="tab" class="tab min-w-max" aria-label="Solution Generator" />
-        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+        <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6 w-full overflow-x-hidden">
             <SolutionGenerator />
         </div>
     </div>
