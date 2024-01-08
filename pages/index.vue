@@ -40,15 +40,6 @@ solverPool.setOnCompletion((opset) => {
     }
 });
 
-// console.log(`main crossOriginIsolated: ${crossOriginIsolated}`)
-// let numbers = [ 6, 8, 8, 11, 11, 23 ];
-// let target = 145728;
-
-// let board = boardGenerator.generateBoard();
-
-// solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
-// solverPool.beginNext();
-
 const iconClassMap = {
     "i-gravity-ui-plus": "i-gravity-ui-plus",
     "i-gravity-ui-minus": "i-gravity-ui-minus",
@@ -91,18 +82,6 @@ function generateNewGame() {
         worker.terminate();
         clearTimeout(timoutId);
     };
-
-    // let board = boardGenerator.generateBoard();
-    // game.generateGame(board);
-
-    // solverPool.clearQueue();
-    // solverPool.queueSolverTask(board.numbers, board.target, 'SOLVE_ALL');
-    // if (solverPool.isInProgress()) {
-    //     solverPool.setAutoBeginNext(true);
-    //     solverPool.stopCurrentTask();
-    // } else {
-    //     solverPool.beginNext();
-    // }
 }
 
 function applyGameSettings() {

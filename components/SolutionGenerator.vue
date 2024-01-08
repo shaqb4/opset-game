@@ -1,5 +1,15 @@
 <script setup>
     import { SolverPool } from "~/lib/solverPool"
+    import { storeToRefs } from 'pinia'
+    import { useGameStore } from '~/store/game'
+
+    const game = useGameStore();
+
+    const { digits: currentGameDigits, digitBoardIds: currentGameDigitBoardIds, target: currentGameTarget, completedActions: currentGameCompletedActions, solutionActions: currentGameSolutionActions } = storeToRefs(game);
+
+    const currentGameDigitBoard = computed(() => {
+        return currentGameDigitBoardIds.value.map((digId) => currentGameDigits.value.get(digId));
+    });
 
     let solutionTarget = ref(0);
     let numbers = ref('');
@@ -81,6 +91,11 @@
         }
     }
 
+    function useCurrentGameValues() {
+        solutionTarget.value = currentGameTarget.value;
+        numbers.value = currentGameDigitBoard.value.map((dig) => dig.number).join(' ');
+    }
+
 </script>
 
 <template>
@@ -98,6 +113,9 @@
                         <div>
                             <h2 class="text-2xl font-bold">Game Board</h2>
                             <div>
+                                <div class="pt-4 pb-2">
+                                    <button class="btn btn-primary btn-sm " @click="useCurrentGameValues()">Use Current Game Board</button>
+                                </div>
                                 <form class="flex flex-col w-full" @submit.prevent="generateSolutions">
                                     <div class="field">
                                         <label class="form-control w-full max-w-xs">
