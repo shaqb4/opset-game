@@ -16,6 +16,7 @@
     let distinctSolutions = ref(new Set());
     let solutionPage = ref(0);
     let solutionPerPage = ref(10);
+    
     let solutionActions = computed(() => {
         let actionArrays = [];
         for (const solutionString of distinctSolutions.value) {
@@ -152,7 +153,7 @@
                     <p v-if="distinctSolutions.size > 0 || isGenerating" class="mb-6">{{ distinctSolutions.size }} solutions have been found</p>
                     <div v-else role="alert" class="alert alert-info">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>Click on the settings icon to choose what board to solve.</span>
+                        <span>Click on the <span class="i-mdi-cog"></span> button to solve an OpSet board.</span>
                     </div>
                     <div>
                         <span v-if="isGenerating" class="loading loading-spinner loading-lg"></span>

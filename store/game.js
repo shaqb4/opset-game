@@ -64,9 +64,21 @@ export const useGameStore = defineStore('game', {
     getters: {
         gameScore: (state) => {
             let distanceFromTarget = Math.min(...state.digitBoardIds.map((id) => state.digits.get(id)).map(dig => Math.abs(state.target - dig.number)))
-            let percentage = (state.target - distanceFromTarget) / state.target;
-
-            return Math.floor(percentage * 10);
+            //let percentage = (state.target - distanceFromTarget) / state.target;
+            let percentage = distanceFromTarget / state.target;
+            if (distanceFromTarget === 0) {
+                return 5;
+            } else if (distanceFromTarget === 1) {
+                return 4;
+            } else if (percentage < 0.01) {
+                return 3;
+            } else if (percentage < 0.05) {
+                return 2;
+            } else if (percentage < 0.1) {
+                return 1;
+            } else {
+                return 0;
+            }
         },
         canFastForward: (state) => {
             return state.history.index + 1 < state.history.actions.length;
@@ -215,6 +227,45 @@ export const useGameStore = defineStore('game', {
             const action = this.history.actions[this.history.index];
             action.execute(this.digitBoardIds, this.digits);
             this.unsetAll();
+        },
+        selectDigit(dig) {
+            if (!dig.isActiveOnBoard) {
+                return;
+            }
+            let id = dig.id;
+            if (this.isDigitDisabled(id)) {
+                return;
+            }
+        
+            if (this.expression.left === null) {
+                this.setLeft(id);
+            } else if (this.expression.op === null) {
+                if (id === this.expression.left) {
+                    this.unsetLeft();
+                } else {
+                    this.setLeft(id);
+                }
+            } else if (this.expression.right === null) {
+                if (id === this.expression.left) {
+                    this.unsetLeft();
+                    this.unsetOp();
+                } else {
+                    this.setRight(id);
+                    //Evaluate expression
+                    this.evalExpression();
+                }
+            }
+        },
+        selectOp(id) {
+            if (this.expression.op === null) {
+                this.setOp(id);
+            } else {
+                if (id === this.expression.op) {
+                    this.unsetOp();
+                } else {
+                    this.setOp(id);
+                }
+            }
         },
         evalExpression() {
             if (this.expression.left === null || this.expression.op === null || this.expression.right === null) {

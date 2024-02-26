@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
   routeRules: {
-    '/': {
+    '/**': {
       headers: {
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin'
@@ -31,5 +31,11 @@ export default defineNuxtConfig({
         'Cross-Origin-Embedder-Policy': 'require-corp',
       }
     }
-  }
+  },
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false
+    }
+  ]
 })
