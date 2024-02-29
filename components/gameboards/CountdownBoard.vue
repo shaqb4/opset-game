@@ -12,6 +12,8 @@ const { gameScore, solutions, target, digits, digitBoardIds, ops, expression, is
 let { timeLeft, isRunning, startTimer, stopTimer, updateTimerBy, resetTimer, setOnTimeOut } = useTimer(60000, 20);
 let isGameOver = ref(false);
 let totalScore = ref(0);
+const multiplierDelta = ref(0.2);
+let timeMultiplier = ref(2);
 
 
 let timerDisplay = computed(() => {
@@ -105,6 +107,7 @@ function generateNewGame() {
     isLoading.value = true;
     soloGameBoards.value = [];
     totalScore.value = 0;
+    timeMultiplier.value = 2;
     generateNewBoards(10, 20000)
         .then((response) => {
             soloGameBoards.value.push(...response.boards);
@@ -122,6 +125,7 @@ function generateNewGame() {
 function restartGame() {
     isGameOver.value = false;
     totalScore.value = 0;
+    timeMultiplier.value = 2;
     resetTimer();
     let hasGeneratedNewBoard = false;
     if (soloGameBoards.value.length > 0) {
@@ -151,7 +155,12 @@ function applyGameSettings() {
 
 function submitBoard() {
     totalScore.value += gameScore.value;
-    updateTimerBy(gameScore.value * 1000 * 2);
+    updateTimerBy(gameScore.value * 1000 * timeMultiplier.value);
+    if (gameScore.value === 5) {
+        timeMultiplier.value = Math.min(3, timeMultiplier.value + multiplierDelta.value);
+    } else if (gameScore.value === 0) {
+        timeMultiplier.value = Math.max(2, timeMultiplier.value - multiplierDelta.value);
+    }
     let hasGeneratedNewBoard = false;
     if (soloGameBoards.value.length > 0) {
         game.generateGame(soloGameBoards.value.pop());
@@ -179,7 +188,7 @@ generateNewGame();
 <template>
     <div>
         <section class="flex flex-wrap justify-center">
-            <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-end px-6 py-4">
+            <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-end py-4">
                 <div>
                     <div class="tooltip" data-tip="Rules">
                         <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="info_modal.showModal()" aria-label="Game information"><span class="i-gravity-ui-circle-question-fill w-8 h-8 sm:w-6 sm:h-6"></span></button>
@@ -195,7 +204,13 @@ generateNewGame();
                                 <p>Calculate the target number using the given set of numbers and the mathematical operations <span class="i-gravity-ui-plus"></span>, <span class="i-gravity-ui-minus"></span>, <span class="i-gravity-ui-xmark"></span> and <span class="i-tabler-divide"></span>.</p>
                                 <p>Get as many points as possible before the timer runs out.</p>
                                 <h3>The Timer</h3>
-                                <p>Every time you complete or submit a board, time will be added to the timer based on your score for that board. The amount of seconds added is two times your score. If you reach the target number for a score of 5, then 10 seconds will be added to your time. If your score is 4, then 8 seconds will be added, and so on.</p>
+                                <p>
+                                    Every time you complete or submit a board, time will be added to the timer based on your score for that board. The amount of seconds added is your score times your multiplier.
+                                </p>
+                                <p>
+                                    The multiplier starts at 2. Every time you complete a board with the target number (a perfect score), your multiplier increases by {{ multiplierDelta }} up to a maximum of 3. 
+                                    If you skip/submit a board with a score of 0, your multiplier decreases by {{ multiplierDelta }} down to a minimum of 2.
+                                </p>
                                 <h3>Scoring</h3>
                                 <p>
                                     Your score depends on how close you are to the target number. For example, let's say the target number is 200.
@@ -275,6 +290,7 @@ generateNewGame();
             <div v-if="isGameOver" class="flex flex-col items-center pt-3">
                 <div class="flex flex-col items-center pt-3 gap-4">
                     <p class="text-4xl font-semibold">{{ timerDisplay }}</p>
+                    <p class="font-semibold">Multiplier: {{ timeMultiplier.toFixed(1) }}</p>
                     <p class="font-semibold">Total Score: {{ totalScore }}</p>
                     <button class="btn btn-accent" @click="restartGame()">Play Again</button>
                 </div>
@@ -283,6 +299,7 @@ generateNewGame();
                 <div class="w-full lg:w-2/3 flex flex-col gap-8">
                     <div class="flex flex-col items-center pt-3">
                         <p class="text-4xl font-semibold">{{ timerDisplay }}</p>
+                        <p class="font-semibold">Multiplier: {{ timeMultiplier.toFixed(1) }}</p>
                         <p class="font-semibold">Total Score: {{ totalScore }}</p>
                     </div>
                     <div class="flex flex-col items-center pt-3">
