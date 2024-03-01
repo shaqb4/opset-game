@@ -7,7 +7,7 @@ import { OpSetBoardGenerator, OpSetBoardConfig } from '~/lib/opSetBoardGenerator
 
 const game = useGameStore();
 
-const { gameScore, solutions, target, digits, digitBoardIds, ops, expression, isDigitSelected, isOpSelected, isDigitDisabled, completedActions, solutionActions } = storeToRefs(game);
+const { gameScore, solutions, target, digits, digitBoardIds, ops, expression, isDigitSelected, isOpSelected, isDigitDisabled, solutionActions } = storeToRefs(game);
 
 let { timeLeft, isRunning, startTimer, stopTimer, updateTimerBy, resetTimer, setOnTimeOut } = useTimer(60000, 20);
 let isGameOver = ref(false);
@@ -188,7 +188,7 @@ generateNewGame();
 <template>
     <div>
         <section class="flex flex-wrap justify-center">
-            <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-end py-4">
+            <div class="mb-2 space-y-3 w-full lg:w-2/3 flex justify-end">
                 <div>
                     <div class="tooltip" data-tip="Rules">
                         <button class="btn btn-ghost btn-sm btn-square w-12 h-12 sm:w-8 sm:h-8" onclick="info_modal.showModal()" aria-label="Game information"><span class="i-gravity-ui-circle-question-fill w-8 h-8 sm:w-6 sm:h-6"></span></button>
@@ -319,15 +319,6 @@ generateNewGame();
                     <div class="flex flex-col items-center pb-3">
                         <button class="btn btn-accent" @click="submitBoard()">Submit</button>
                     </div>
-                </div>
-                <div class="divider after:bg-gray-200 before:bg-gray-200 w-full lg:w-2/3"></div> 
-                <div class="w-full lg:w-2/3 space-y-3 py-3">
-                    <p class="">Actions</p>
-                    <ol class="list-decimal list-inside">
-                        <li v-for="action in completedActions">
-                            {{ action }}
-                        </li>
-                    </ol>
                 </div>
             </template>
         </section>

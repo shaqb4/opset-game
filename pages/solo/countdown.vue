@@ -3,7 +3,9 @@
 </script>
 
 <template>
-    <CountdownBoard />
+    <div class="p-6 w-full" >
+        <CountdownBoard />
+    </div>
 </template>
 
 <style lang="postcss" scoped>
