@@ -12,6 +12,7 @@
                                     </svg>
                                 </div>
                                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-[#284A52] rounded-box w-52 ">
+                                    <li><a href="/">Home</a></li>
                                     <li>
                                         <a href="/solo">Solo</a>
                                         <ul class="p-2">
@@ -19,13 +20,14 @@
                                             <li><a href="/solo/countdown">Countdown</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="/multiplayer">Multiplayer</a></li>
+                                    <!-- <li><a href="/multiplayer">Multiplayer</a></li> -->
                                 </ul>
                             </div>
                             <a class="btn btn-ghost px-0 text-xl" href="/">OpSet Games</a>
                         </div>
                         <div class="navbar-end hidden lg:flex">
                             <ul class="menu menu-horizontal px-1">
+                                <li><a href="/">Home</a></li>
                                 <li>
                                     <details>
                                         <summary><a href="/solo">Solo</a></summary>
@@ -35,7 +37,7 @@
                                         </ul>
                                     </details>
                                 </li>
-                                <li><a href="/multiplayer">Multiplayer</a></li>
+                                <!-- <li><a href="/multiplayer">Multiplayer</a></li> -->
                             </ul>
                         </div>
                     </div>
