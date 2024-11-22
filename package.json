@@ -19,6 +19,7 @@
     "@types/node": "^18.17.3",
     "daisyui": "^4.4.19",
     "nuxt": "^3.6.5",
+    "nuxt-gtag": "^3.0.2",
     "nuxt-simple-robots": "^4.0.0-rc.1",
     "nuxt-simple-sitemap": "^4.1.17"
   },
