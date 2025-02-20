@@ -10,7 +10,7 @@
                 OpSet is a math game inspired by the late NYT Digits.
             </p>
             <p>
-                <strong>Practice:</strong> Play as many games as you want, with the ability to make it easier or harder by controlling the ragne of numbers allowed and even how many numbers a game board has.
+                <strong>Practice:</strong> Play as many games as you want, with the ability to adjust settings in order customize the board.
             </p>
             <p>
                 <strong>Countdown:</strong> Starting with 60 seconds, get as many points as possible before the time runs out. The better you do, the more time is added to the countdown.
